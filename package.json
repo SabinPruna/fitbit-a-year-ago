@@ -1,0 +1,21 @@
+{
+  "fitbit": {
+    "appUUID": "9629c12e-501b-4a81-8cc1-fa1de23a5c91",
+    "appType": "app",
+    "appDisplayName": "settings",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#607d8b",
+    "requestedPermissions": [
+      "access_internet"
+    ],
+    "buildTargets": [
+      "higgs",
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "settings"
+      }
+    }
+  }
+}
