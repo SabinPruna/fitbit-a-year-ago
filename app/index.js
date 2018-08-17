@@ -1,16 +1,11 @@
 import document from "document";
 import * as messaging from "messaging";
 
-let myImage = document.getElementById("myImage");
+let sleepAYearAgo = document.getElementById("sleep_a_year_ago");
+let sleepToday = document.getElementById("sleep_today");
 
 // Message is received from companion
 messaging.peerSocket.onmessage = evt => {
-  // Am I Tired?
-  if (evt.data.totalMinutesAsleep >= 300) {
-    // Had at least 5 hours sleep
-    myImage.href = "images/awake.jpg";
-  } else {
-    // Had less than 5 hours sleep
-    myImage.href = "images/sleepy.jpg";
-  }
+  sleepAYearAgo.text = evt.data.totalMinutesAsleepAYearAgo;
+  sleepToday.text = evt.data.totalMinutesAsleep;
 };

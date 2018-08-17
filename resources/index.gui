@@ -1,3 +1,8 @@
 <svg>
-  <image id="sleepImage" href="images/waiting.jpg" />
+  <defs>
+    <link rel="stylesheet" href="styles.css" />
+  </defs>
+
+  <text id="sleep_a_year_ago"></text>
+  <text id="sleep_today"></text>
 </svg>

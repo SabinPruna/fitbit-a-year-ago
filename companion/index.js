@@ -12,7 +12,8 @@ function fetchSleepData(accessToken) {
   fetch(`https://api.fitbit.com/1.2/user/-/sleep/date/${todayDate}.json`, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      "Access-Control-Allow-Origin": "*"
     }
   })
     .then(function (res) {
@@ -26,7 +27,8 @@ function fetchSleepData(accessToken) {
   fetch(`https://api.fitbit.com/1.2/user/-/sleep/date/${aYearAgoDate}.json`, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${accessToken}`
+      "Authorization": `Bearer ${accessToken}`,
+      "Access-Control-Allow-Origin": "*"
     }
   })
     .then(function (res) {
@@ -34,13 +36,12 @@ function fetchSleepData(accessToken) {
     })
     .then(function (data) {
       sleepData.totalMinutesAsleepAYearAgo = data.summary.totalMinutesAsleep;
+
+      if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+        messaging.peerSocket.send(sleepData);
+      }
     })
     .catch(err => console.log('[FETCH]: ' + err));
-
-  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-    messaging.peerSocket.send(sleepData);
-  }
-
 }
 
 // A user changes Settings
