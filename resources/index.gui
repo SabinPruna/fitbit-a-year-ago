@@ -1,8 +1,11 @@
-<svg>
-  <defs>
+ <svg>
+   <defs>
     <link rel="stylesheet" href="styles.css" />
   </defs>
+<text x="50%" y="10%+15" id="sleep_a_year_ago" class="demotext"></text>
+<text x="50%" y="30%+15" id="sleep_today" class="demotext"></text>
 
-  <text id="sleep_a_year_ago"></text>
-  <text id="sleep_today"></text>
+
+<text x="50%" y="50%+15" id="steps_a_year_ago" class="demotext"></text>
+<text x="50%" y="60%+15" id="steps_today" class="demotext"></text>
 </svg>

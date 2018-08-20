@@ -1,10 +1,17 @@
 import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 
+var userData = {};
+
+function fetchAllData(accessToken) {
+  fetchSleepData(accessToken);
+  fetchStepsData(accessToken);
+}
+
+
 // Fetch Sleep Data from Fitbit Web API
 function fetchSleepData(accessToken) {
   let date = new Date();
-  let sleepData = {};
   let todayDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`; //YYYY-MM-DD
   let aYearAgoDate = `${date.getFullYear() - 1}-${date.getMonth() + 1}-${date.getDate()}`;
 
@@ -20,7 +27,7 @@ function fetchSleepData(accessToken) {
       return res.json();
     })
     .then(function (data) {
-      sleepData.totalMinutesAsleep = data.summary.totalMinutesAsleep;
+      userData.totalMinutesAsleep = data.summary.totalMinutesAsleep;
     })
     .catch(err => console.log('[FETCH]: ' + err));
 
@@ -35,14 +42,40 @@ function fetchSleepData(accessToken) {
       return res.json();
     })
     .then(function (data) {
-      sleepData.totalMinutesAsleepAYearAgo = data.summary.totalMinutesAsleep;
+      userData.totalMinutesAsleepAYearAgo = data.summary.totalMinutesAsleep;
 
       if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-        messaging.peerSocket.send(sleepData);
+        messaging.peerSocket.send(userData);
       }
     })
     .catch(err => console.log('[FETCH]: ' + err));
 }
+
+function fetchStepsData(accessToken) {
+  let date = new Date();
+  let aYearAgoDate = `${date.getFullYear() - 1}-${date.getMonth() + 1}-${date.getDate()}`;
+
+  fetch(`https://api.fitbit.com/1/user/-/activities/date/${aYearAgoDate}.json`, {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${accessToken}`,
+      "Access-Control-Allow-Origin": "*"
+    }
+  })
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      console.log(data.steps);
+      userData.steps = data.steps;
+      if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+        console.log(userData.steps);
+        messaging.peerSocket.send(userData);
+      }
+    })
+    .catch(err => console.log('[FETCH]: ' + err));
+}
+
 
 // A user changes Settings
 settingsStorage.onchange = evt => {
@@ -60,7 +93,7 @@ function restoreSettings() {
     if (key && key === "oauth") {
       // We already have an oauth token
       let data = JSON.parse(settingsStorage.getItem(key))
-      fetchSleepData(data.access_token);
+      fetchAllData(data.access_token);
     }
   }
 }
@@ -69,3 +102,5 @@ function restoreSettings() {
 messaging.peerSocket.onopen = () => {
   restoreSettings();
 };
+
+
